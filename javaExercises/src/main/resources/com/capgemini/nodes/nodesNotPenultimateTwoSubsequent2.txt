@@ -1,0 +1,19 @@
+N001
+One little node.
+----
+
+N002
+Another little node.
+N001
+
+N003
+Omg third node!
+N001
+
+N004
+Penultimate.
+N002
+
+N005
+Finally the last.
+N004
