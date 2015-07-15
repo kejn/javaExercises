@@ -41,7 +41,7 @@ public class PokerHand {
 	public String toString() {
 		String handString = new String();
 		for (GameCard gameCard : hand) {
-			handString += (gameCard.getRank() + gameCard.getSuit() + " ");
+			handString += (gameCard.toString() + " ");
 		}
 		return handString.substring(0, handString.length() - 1);
 	}
@@ -49,43 +49,44 @@ public class PokerHand {
 	/**
 	 * Declares a winner in poker game.
 	 * 
-	 * @return The player's PokerHand which score is better.
+	 * @return The player's PokerHand which score is better
+	 *         </p>
+	 *         <b>null</b> for a tie (see
+	 *         {@link #firstCardGreaterWins(PokerHand, PokerHand)}).
 	 */
 	public static PokerHand winner(PokerHand player1, PokerHand player2) {
-		if (player2.scoreGreater(player1)
-				|| (player2.scoreEquals(player1) && player2.firstNotEqualCardIsGreater(player1))) {
+		int player1Wins = player1.score().compareTo(player2.score());
+
+		if (player1Wins > 0) {
+			return player1;
+		}
+		if (player1Wins < 0) {
 			return player2;
 		}
-		return player1;
-	}
 
-	private boolean firstNotEqualCardIsGreater(PokerHand toCompare) {
-		for (int i = 0; i < 5; ++i) {
-			if (getCard(i).greater(toCompare.getCard(i))) {
-				return true;
-			} else if (toCompare.getCard(i).greater(getCard(i))) {
-				break;
-			}
-		}
-		return false;
-	}
-
-	public boolean scoreGreater(PokerHand toCompare) {
-		if (score().getValue() > toCompare.score().getValue()) {
-			return true;
-		}
-		return false;
-	}
-
-	public boolean scoreEquals(PokerHand toCompare) {
-		if (score().getValue() == toCompare.score().getValue()) {
-			return true;
-		}
-		return false;
+		return firstCardGreaterWins(player1, player2);
 	}
 
 	/**
-	 * @return One of scores defined by HandRanks.
+	 * Declares a winner in poker game if both players have the same HandRanks.
+	 * 
+	 * @return The player's PokerHand which first greater card wins.
+	 *         </p>
+	 *         <b>null</b> for a tie.
+	 */
+	private static PokerHand firstCardGreaterWins(PokerHand player1, PokerHand player2) {
+		for (int i = 0; i < 5; ++i) {
+			if (player1.getCard(i).greater(player2.getCard(i))) {
+				return player1;
+			} else if (player2.getCard(i).greater(player1.getCard(i))) {
+				return player2;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Calculates one of scores defined by HandRanks.
 	 */
 	public HandRanks score() {
 		HandRanks score = HandRanks.HIGH_CARD;
@@ -131,9 +132,9 @@ public class PokerHand {
 	 * @return <b>true</b> if all game cards in hand are of the same suit.
 	 */
 	private boolean isOfTheSameSuit() {
-		String flush = hand.get(0).getSuit();
+		GameCardSuit suit = hand.get(0).getSuit();
 		for (int i = 1; i < hand.size(); ++i) {
-			if (!hand.get(i).getSuit().equals(flush)) {
+			if (!hand.get(i).getSuit().equals(suit)) {
 				return false;
 			}
 		}
