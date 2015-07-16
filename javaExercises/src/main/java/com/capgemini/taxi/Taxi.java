@@ -2,7 +2,6 @@ package com.capgemini.taxi;
 
 public class Taxi extends Position implements Runnable {
 	private static long id = 0;
-	private static User appUser;
 
 	public static final Double MAX_MOVE_DISTANCE_PER_REFRESH = 0.001; // [km]
 
@@ -44,10 +43,6 @@ public class Taxi extends Position implements Runnable {
 		return true;
 	}
 	
-	public void setAppUser(User user) {
-		appUser = user;
-	}
-
 	public synchronized void move() {
 		if (isDispatched()) {
 			Double dist = distance(client);
