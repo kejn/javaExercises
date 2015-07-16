@@ -28,7 +28,7 @@ public class Taxi extends Position implements Runnable {
 	 * Changes taxi position until the thread is terminated.
 	 */
 	public synchronized void run() {
-		while (true) {
+		while (isDispatched()) {
 			try {
 				Thread.sleep(REFRESH_MILLISECONDS);
 				move();
@@ -37,6 +37,7 @@ public class Taxi extends Position implements Runnable {
 					callOff(client);
 				}
 				e.printStackTrace();
+				break;
 			}
 		}
 	}
@@ -62,9 +63,6 @@ public class Taxi extends Position implements Runnable {
 					shiftBy(0.0, MAX_MOVE_DISTANCE_PER_REFRESH * Math.signum(dir.getY()));
 				}
 			}
-		} else if (Math.random() * 1000 - 500 > 0) {
-			shiftBy(MAX_MOVE_DISTANCE_PER_REFRESH * Math.signum(Math.random() * 1000 - 500),
-					MAX_MOVE_DISTANCE_PER_REFRESH * Math.signum(Math.random() * 1000 - 500));
 		}
 	}
 
