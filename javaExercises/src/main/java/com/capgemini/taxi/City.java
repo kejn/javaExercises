@@ -5,7 +5,7 @@ import java.util.List;
 
 public class City {
 	public static final Double CITY_AREA = 20.0;
-	public static final long MAX_NUMBER_OF_TAXI = 1000;
+	public static final int MAX_NUMBER_OF_TAXI = 100000;
 
 	public final List<Taxi> taxiList;
 	

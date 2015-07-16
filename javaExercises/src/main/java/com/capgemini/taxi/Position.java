@@ -54,24 +54,44 @@ public class Position {
 		y = adjustToSetPrecision(Math.random() * maxXY);
 	}
 
+	/**
+	 * @return distance to <b>other</b> position (in kilometers)
+	 */
 	public Double distance(Position other) {
 		return adjustToSetPrecision(Math.sqrt(Math.pow(other.getX() - x, 2) + Math.pow(other.getY() - y, 2)));
 	}
 
-	public Position directionTo(Position other) {
+	/**
+	 * @param other
+	 * @return Position by which <b>other</b> is shifted compared to <b>this</b>.
+	 */
+	public Position direction(Position other) {
 		return new Position(adjustToSetPrecision(other.getX() - x), adjustToSetPrecision(other.getY() - y));
 	}
 
+	/**
+	 * Assigns <b>this</b> position <b>another</b> position.
+	 * @param another
+	 */
 	public void jumpTo(Position another) {
 		x = another.getX();
 		y = another.getY();
 	}
 
+	/**
+	 * Shifts <b>this</b> position's {@link #x} by <b>x</b> and {@link #y} by <b>y</b>.
+	 * @param x
+	 * @param y
+	 */
 	public void shiftBy(Double x, Double y) {
 		this.x += x;
 		this.y += y;
 	}
 
+	/**
+	 * Convenient getter for public use with subclasses which inherit <b>this</b> class.
+	 * @return <b>this</b>
+	 */
 	public Position getPosition() {
 		return this;
 	}

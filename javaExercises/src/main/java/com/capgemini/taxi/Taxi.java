@@ -5,11 +5,14 @@ public class Taxi extends Position implements Runnable {
 
 	public static final Double MAX_MOVE_DISTANCE_PER_REFRESH = 0.001; // [km]
 
-	private final Thread thread = new Thread(this, "Taxi " + (++id));
+	private final Thread thread;
 	private User client = null;
 
 	public Taxi() {
 		super();
+		++id;
+		thread = new Thread(this);
+		thread.setName("Taxi " + String.format("%" + (int) Math.log10(City.MAX_NUMBER_OF_TAXI) + "d", id));
 	}
 
 	/**
@@ -42,23 +45,24 @@ public class Taxi extends Position implements Runnable {
 		}
 		return true;
 	}
-	
+
 	public synchronized void move() {
 		if (isDispatched()) {
 			Double dist = distance(client);
-			Position dir = directionTo(client);
+			Position dir = direction(client);
 
-			if (dist < Math.sqrt(2)*MAX_MOVE_DISTANCE_PER_REFRESH) {
+			if (dist < Math.sqrt(2) * MAX_MOVE_DISTANCE_PER_REFRESH) {
 				super.jumpTo(client);
 			} else {
-				if(dir.getX() > 0){
+				if (dir.getX() > 0) {
 					shiftBy(MAX_MOVE_DISTANCE_PER_REFRESH * Math.signum(dir.getX()), 0.0);
-				} else if(dir.getY() > 0){
+				} else if (dir.getY() > 0) {
 					shiftBy(0.0, MAX_MOVE_DISTANCE_PER_REFRESH * Math.signum(dir.getY()));
 				}
 			}
-		} else {
-			super.random();
+		} else if (Math.random() * 1000 - 500 > 0) {
+			shiftBy(MAX_MOVE_DISTANCE_PER_REFRESH * Math.signum(Math.random() * 1000 - 500),
+					MAX_MOVE_DISTANCE_PER_REFRESH * Math.signum(Math.random() * 1000 - 500));
 		}
 	}
 
@@ -92,10 +96,10 @@ public class Taxi extends Position implements Runnable {
 		}
 		return false;
 	}
-	
+
 	@Override
 	public String toString() {
-		return thread.getName();
+		return thread.getName() + " " + super.toString();
 	}
 
 }
