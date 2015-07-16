@@ -22,7 +22,7 @@ public class NodesTest {
 
 		try {
 			nv.validateMethod(nodes);
-			System.out.println("nodesInLineAreValid() --- passed");
+//			System.out.println("nodesInLineAreValid() --- passed");
 		} catch (NodeException ne) {
 			fail(ne.getMessage());
 		}
@@ -34,7 +34,7 @@ public class NodesTest {
 
 		try {
 			nv.validateMethod(nodes);
-			System.out.println("lastTwoNodesCanHaveCommonParent() --- passed");
+//			System.out.println("lastTwoNodesCanHaveCommonParent() --- passed");
 		} catch (NodeException ne) {
 			fail(ne.getMessage());
 		}
@@ -48,7 +48,7 @@ public class NodesTest {
 			nv.validateMethod(nodes);
 			fail("Wrong ID validation.");
 		} catch (NodeException ne) {
-			System.err.println(ne.getMessage());
+//			System.err.println(ne.getMessage());
 		}
 	}
 
@@ -60,7 +60,7 @@ public class NodesTest {
 			nv.validateMethod(nodes);
 			fail("Wrong predecessor ID validation.");
 		} catch (NodeException ne) {
-			System.err.println(ne.getMessage());
+//			System.err.println(ne.getMessage());
 		}
 	}
 
@@ -72,7 +72,7 @@ public class NodesTest {
 			nv.validateMethod(nodes);
 			fail("Wrong description validation.");
 		} catch (NodeException ne) {
-			System.err.println(ne.getMessage());
+//			System.err.println(ne.getMessage());
 		}
 	}
 
@@ -84,7 +84,7 @@ public class NodesTest {
 			nv.validateMethod(nodes);
 			fail("Wrong cycle identification.");
 		} catch (NodeException ne) {
-			System.err.println(ne.getMessage());
+//			System.err.println(ne.getMessage());
 		}
 	}
 
@@ -96,7 +96,7 @@ public class NodesTest {
 			nv.validateMethod(nodes);
 			fail("Wrong cycle identification.");
 		} catch (NodeException ne) {
-			System.err.println(ne.getMessage());
+//			System.err.println(ne.getMessage());
 		}
 	}
 
@@ -108,7 +108,7 @@ public class NodesTest {
 			nv.validateMethod(nodes);
 			fail("Should detect that not penultimate has more than 1 subsequent.");
 		} catch (NodeException ne) {
-			System.err.println(ne.getMessage());
+//			System.err.println(ne.getMessage());
 		}
 	}
 
@@ -120,7 +120,7 @@ public class NodesTest {
 			nv.validateMethod(nodes);
 			fail("Should detect that not penultimate has more than 1 subsequent.");
 		} catch (NodeException ne) {
-			System.err.println(ne.getMessage());
+//			System.err.println(ne.getMessage());
 		}
 	}
 
