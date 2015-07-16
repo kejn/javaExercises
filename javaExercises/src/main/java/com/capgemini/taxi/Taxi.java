@@ -20,7 +20,7 @@ public class Taxi extends Position implements Runnable {
 	 * 
 	 * @return Taxi which called this method
 	 */
-	private void driveToClient() {
+	private void drive() {
 		thread.start();
 	}
 
@@ -28,12 +28,14 @@ public class Taxi extends Position implements Runnable {
 	 * Changes taxi position until the thread is terminated.
 	 */
 	public synchronized void run() {
-		while (isDispatched()) {
+		while (true) {
 			try {
 				Thread.sleep(REFRESH_MILLISECONDS);
 				move();
 			} catch (InterruptedException e) {
-				callOff(client);
+				if (isDispatched()) {
+					callOff(client);
+				}
 				e.printStackTrace();
 			}
 		}
@@ -77,7 +79,7 @@ public class Taxi extends Position implements Runnable {
 	public synchronized boolean dispatchedBy(User newClient) {
 		if (!isDispatched()) {
 			client = newClient;
-			driveToClient();
+			drive();
 			return true;
 		}
 		return false;
