@@ -2,14 +2,15 @@ package com.capgemini.taxi;
 
 public class Taxi extends Position implements Runnable {
 	private static long id = 0;
+	private static User appUser;
 
-	private final Thread thread;
-	private User client;
+	public static final Double MAX_MOVE_DISTANCE_PER_REFRESH = 0.001; // [km]
+
+	private final Thread thread = new Thread(this, "Taxi " + (++id));
+	private User client = null;
 
 	public Taxi() {
 		super();
-		client = null;
-		thread = new Thread(this, "Taxi Thread, ID: " + (++id));
 	}
 
 	/**
@@ -24,7 +25,7 @@ public class Taxi extends Position implements Runnable {
 	/**
 	 * Changes taxi position until the thread is terminated.
 	 */
-	public void run() {
+	public synchronized void run() {
 		while (isDispatched()) {
 			try {
 				Thread.sleep(REFRESH_MILLISECONDS);
@@ -42,9 +43,28 @@ public class Taxi extends Position implements Runnable {
 		}
 		return true;
 	}
+	
+	public void setAppUser(User user) {
+		appUser = user;
+	}
 
-	private void move() {
-		super.random();
+	public synchronized void move() {
+		if (isDispatched()) {
+			Double dist = distance(client);
+			Position dir = directionTo(client);
+
+			if (dist < Math.sqrt(2)*MAX_MOVE_DISTANCE_PER_REFRESH) {
+				super.jumpTo(client);
+			} else {
+				if(dir.getX() > 0){
+					shiftBy(MAX_MOVE_DISTANCE_PER_REFRESH * Math.signum(dir.getX()), 0.0);
+				} else if(dir.getY() > 0){
+					shiftBy(0.0, MAX_MOVE_DISTANCE_PER_REFRESH * Math.signum(dir.getY()));
+				}
+			}
+		} else {
+			super.random();
+		}
 	}
 
 	/**
@@ -55,7 +75,7 @@ public class Taxi extends Position implements Runnable {
 	 *            the User who dispatched the Taxi
 	 * @return <b>true</b> if was not dispatched by another client before.
 	 */
-	public boolean dispatch(User newClient) {
+	public synchronized boolean dispatchedBy(User newClient) {
 		if (!isDispatched()) {
 			client = newClient;
 			driveToClient();
@@ -67,14 +87,20 @@ public class Taxi extends Position implements Runnable {
 	/**
 	 * Calls of the Taxi so that it is no longer dispatched. The method is
 	 * successful only if called by the client, who dispatched this Taxi before.
+	 * 
 	 * @return <b>true</b> if the call off was successful.
 	 */
-	public boolean callOff(User clientCallingOff) {
+	public synchronized boolean callOff(User clientCallingOff) {
 		if (client.equals(clientCallingOff)) {
 			client = null;
 			return true;
 		}
 		return false;
+	}
+	
+	@Override
+	public String toString() {
+		return thread.getName();
 	}
 
 }
